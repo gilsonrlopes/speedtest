@@ -5,7 +5,7 @@ import localFont from "next/font/local";
 import { Geist, Geist_Mono, Playfair_Display, Raleway } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-// 1. SATOSHI (Local)
+// 1. SATOSHI (Local) - com ajustes de performance
 const satoshi = localFont({
   src: [
     { path: "./fonts/Satoshi-Regular.woff2", weight: "400", style: "normal" },
@@ -16,31 +16,37 @@ const satoshi = localFont({
   variable: "--font-satoshi",
   display: "swap",
   preload: true,
+  fallback: ["system-ui", "arial"],
 });
 
-// 2. Outras Fontes (Google)
+// 2. Outras Fontes (Google) - otimizadas
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
   display: "swap",
+  preload: true,
+  fallback: ["system-ui", "arial"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
   display: "swap",
+  preload: false, // Não é crítica
 });
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
   display: "swap",
+  preload: false, // Não é crítica
 });
 
 const raleway = Raleway({
   variable: "--font-raleway",
   subsets: ["latin"],
   display: "swap",
+  preload: false, // Não é crítica
 });
 
 // 3. Metadata (SEO)
@@ -129,24 +135,55 @@ export default function RootLayout({
   return (
     <html lang="pt-br" className="dark scroll-smooth" suppressHydrationWarning>
       <head>
-        {/* Preconnect GTM */}
+        {/* DNS Prefetch e Preconnect */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-        {/* Preload imagem mobile */}
+        {/* CSS Crítico Inline - evita render blocking */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              /* Critical CSS - carrega antes do CSS externo */
+              body { 
+                margin: 0; 
+                padding: 0; 
+                background: #000;
+                color: #fff;
+              }
+              
+              /* Otimização LCP - reserva espaço para imagem */
+              img[fetchpriority="high"] { 
+                content-visibility: auto;
+                contain-intrinsic-size: 375px 600px;
+              }
+              
+              /* Previne CLS */
+              .hero-container {
+                min-height: 100vh;
+                position: relative;
+              }
+            `,
+          }}
+        />
+
+        {/* Preload imagem LCP mobile com fetchpriority */}
         <link
           rel="preload"
           as="image"
           href="/hero01mob.avif"
+          type="image/avif"
           media="(max-width: 767px)"
           fetchPriority="high"
         />
 
-        {/* Preload imagem desktop */}
+        {/* Preload imagem LCP desktop */}
         <link
           rel="preload"
           as="image"
           href="/herolp01.webp"
+          type="image/webp"
           media="(min-width: 768px)"
           fetchPriority="high"
         />
@@ -170,7 +207,7 @@ export default function RootLayout({
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
-            title="Google Tag Manager (noscript)"
+            title="Google Tag Manager"
           />
         </noscript>
 
@@ -179,7 +216,7 @@ export default function RootLayout({
         {/* Vercel Insights (somente produção) */}
         {process.env.NODE_ENV === "production" && <SpeedInsights />}
 
-        {/* GTM Lazy Load */}
+        {/* GTM com strategy lazyOnload - não bloqueia renderização */}
         <Script
           id="google-tag-manager"
           strategy="lazyOnload"
@@ -203,6 +240,7 @@ export default function RootLayout({
         <Script
           id="json-ld-organization"
           type="application/ld+json"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </body>
