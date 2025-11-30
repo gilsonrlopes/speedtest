@@ -155,10 +155,7 @@ const OutrasCidades: React.FC = () => {
                 whileHover={{ y: -8, scale: 1.02 }}
                 className="group relative bg-gray-900/40 border border-white/5 rounded-2xl p-6 transition-all duration-500 overflow-hidden"
               >
-                {/* Borda de Energia */}
-                <div className="absolute inset-0 -z-10 p-[1px] opacity-30 group-hover:opacity-100 transition-opacity duration-700 rounded-2xl overflow-hidden blur-[1px]">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/40 to-transparent animate-border-flow rounded-2xl" />
-                </div>
+                
 
                 {/* Ícone com Glow Suave */}
                 <div className="flex justify-center mb-4">

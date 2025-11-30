@@ -63,7 +63,7 @@ const Footer: React.FC<FooterProps> = ({ cidade }) => {
           >
             <Link href="#inicio" className="inline-block mb-6">
               <Image 
-                src="/Logo.png" 
+                src="/logofooter.png" 
                 alt={`GR Sites - ${cidade.nome}`}
                 width={140} 
                 height={56} 

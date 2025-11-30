@@ -77,7 +77,7 @@ const LighthouseAnalyzer: React.FC = () => {
     : 0;
 
   return (
-    <section className="py-20 bg-gradient-to-b from-black via-slate-950 to-black relative overflow-hidden">
+    <section id="lighthouse" className="py-20 bg-gradient-to-b from-black via-slate-950 to-black relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{

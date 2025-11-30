@@ -161,7 +161,7 @@ const Header: React.FC<HeaderProps> = ({ cidade }) => {
             </button>
           </nav>
 
-          {/* Botão Contato Desktop */}
+          {/* Botão Receber Analise Grátis Desktop */}
           <div className="hidden md:block">
             <button
               onClick={handleContact}

@@ -56,6 +56,13 @@ export const metadata: Metadata = {
     default: "GR Sites - Criação de Sites Profissionais e SEO",
     template: "%s | GR Sites",
   },
+
+icons: {
+    icon: '/fav.ico', // Coloque aqui após converter fav.jpg para .ico
+    shortcut: '/fav.ico',
+    apple: '/fav.ico', // Opcional: para iPhone/iPad
+  },
+
   description:
     "Criação de sites modernos, rápidos e otimizados para SEO. Transforme visitantes em clientes em Curitiba e Região.",
   keywords: [
@@ -116,7 +123,7 @@ const jsonLd = {
   "@type": "Organization",
   name: "GR Sites",
   url: "https://www.grsites.com.br/",
-  logo: "https://www.grsites.com.br/Logo.png",
+  logo: "https://www.grsites.com.br/logo.png",
   contactPoint: {
     "@type": "ContactPoint",
     telephone: "+55-41-99937-2194",
