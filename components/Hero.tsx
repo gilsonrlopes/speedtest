@@ -117,7 +117,7 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
                       priority={isFirst}
                       fetchPriority={isFirst ? "high" : "auto"}
                       sizes="100vw"
-                      quality={isMobile ? 75 : 85}
+                      quality={isMobile ? 70 : 75}
                       className="object-cover"
                     />
                   </div>

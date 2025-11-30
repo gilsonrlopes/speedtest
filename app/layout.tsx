@@ -146,7 +146,9 @@ export default function RootLayout({
   return (
     <html lang="pt-br" className="dark scroll-smooth" suppressHydrationWarning>
       <head>
+        {/* ✅ FIX 1: Pré-conectar + DNS Prefetch para GTM */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       </head>
 
       <body
@@ -174,10 +176,10 @@ export default function RootLayout({
 
         {process.env.NODE_ENV === "production" && <SpeedInsights />}
 
-        {/* GTM - Versão corrigida para Firefox */}
+        {/* ✅ FIX 2: GTM com strategy="lazyOnload" (carrega DEPOIS do LCP) */}
         <Script
           id="google-tag-manager"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               (function(w,d,s,l,i){

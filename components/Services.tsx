@@ -98,7 +98,6 @@ const Services: React.FC<ServicesProps> = ({ cidade }) => {
     setTimeout(() => setIsTransitioning(false), 500);
   };
 
-  // ✅ Touch events para mobile (substituindo drag do Framer)
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 
@@ -134,7 +133,6 @@ const Services: React.FC<ServicesProps> = ({ cidade }) => {
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        {/* Header */}
         <div className="text-center mb-16 animate-fade-up">
           <div className="inline-flex items-center gap-2 bg-blue-500/10 backdrop-blur-sm border border-blue-400/20 rounded-full px-5 py-2 mb-6">
             <Rocket className="h-4 w-4 text-blue-400" />
@@ -151,9 +149,7 @@ const Services: React.FC<ServicesProps> = ({ cidade }) => {
           </p>
         </div>
 
-        {/* Carousel Container */}
         <div className="relative mb-16">
-          {/* Desktop Carousel */}
           <div className="hidden md:block relative h-[600px]">
             <div className="absolute inset-0 flex items-center justify-center">
               {services.map((service, index) => {
@@ -164,7 +160,6 @@ const Services: React.FC<ServicesProps> = ({ cidade }) => {
                 const isAdjacent = Math.abs(adjustedDiff) === 1;
                 const isVisible = isActive || isAdjacent;
 
-                // ✅ Posicionamento com CSS puro (sem Framer Motion)
                 const getPosition = () => {
                   if (adjustedDiff === 0) return { x: 0, scale: 1, opacity: 1, zIndex: 30 };
                   if (adjustedDiff === 1) return { x: 320, scale: 0.85, opacity: 0.6, zIndex: 20 };
@@ -197,7 +192,6 @@ const Services: React.FC<ServicesProps> = ({ cidade }) => {
               })}
             </div>
 
-            {/* Nav Buttons Desktop */}
             <div className="absolute top-1/2 left-0 right-0 transform -translate-y-1/2 flex justify-between items-center px-4 z-50">
               <button
                 onClick={handlePrev}
@@ -218,7 +212,6 @@ const Services: React.FC<ServicesProps> = ({ cidade }) => {
             </div>
           </div>
 
-          {/* Mobile Carousel */}
           <div className="md:hidden">
             <div
               onTouchStart={handleTouchStart}
@@ -242,8 +235,7 @@ const Services: React.FC<ServicesProps> = ({ cidade }) => {
             </div>
           </div>
 
-          {/* Dots Navigation */}
-          <div className="flex justify-center gap-2 mt-8">
+          <div className="flex justify-center gap-3 mt-8">
             {services.map((_, idx) => (
               <button
                 key={idx}
@@ -255,10 +247,10 @@ const Services: React.FC<ServicesProps> = ({ cidade }) => {
                   }
                 }}
                 disabled={isTransitioning}
-                className={`h-2 rounded-full transition-all ${
+                className={`rounded-full transition-all min-w-[44px] min-h-[44px] flex items-center justify-center ${
                   idx === activeIndex 
-                    ? 'bg-white w-8' 
-                    : 'bg-white/20 hover:bg-white/40 w-2'
+                    ? 'bg-white w-12 h-3' 
+                    : 'bg-white/20 hover:bg-white/40 w-3 h-3'
                 }`}
                 aria-label={`Ir para serviço ${idx + 1}`}
               />
@@ -270,7 +262,6 @@ const Services: React.FC<ServicesProps> = ({ cidade }) => {
   );
 };
 
-// ✅ CARD COMPONENT (SEM FRAMER MOTION)
 interface Service {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
@@ -303,7 +294,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, isActive, cidade, wh
         ${mobile ? 'max-w-sm mx-auto' : ''}
       `}
     >
-      {/* Badge */}
       {service.popular && isActive && (
         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
           <div className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white text-xs font-satoshi font-semibold px-4 py-1.5 rounded-full shadow-md shadow-blue-500/30">
@@ -351,6 +341,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, isActive, cidade, wh
             ? `bg-gradient-to-r ${service.gradient} text-white hover:scale-105 shadow-lg shadow-blue-500/30`
             : 'bg-white/5 text-gray-300 border border-white/10'
         }`}
+        aria-label={`Solicitar orçamento para ${service.title}`}
       >
         {isActive ? 'Quero Este Agora' : 'Ver Detalhes'}
       </a>
