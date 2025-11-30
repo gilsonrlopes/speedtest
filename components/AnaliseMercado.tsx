@@ -65,6 +65,10 @@ const AnaliseMercado: React.FC<AnaliseMercadoProps> = ({ cidade }) => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="max-w-5xl mx-auto"
         >
+
+          <p className="font-sans text-base sm:text-lg text-gray-300 leading-relaxed">
+  Para os {gentilico} de {cidade.nome}, investir em presença digital...
+</p>
           {/* TEXTO HIPER-PERSONALIZADO COM SEUS DADOS NOVOS */}
           <div className="bg-gradient-to-b from-gray-800 to-gray-900 border border-white/10 rounded-2xl p-6 sm:p-8 mb-12 relative overflow-hidden">
             

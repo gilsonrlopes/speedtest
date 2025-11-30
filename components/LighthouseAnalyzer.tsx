@@ -46,7 +46,7 @@ const LighthouseAnalyzer: React.FC = () => {
         bestPractices: Math.round(lighthouseResult.categories['best-practices'].score * 100)
       });
 
-    } catch (err) {
+    } catch (_) {
       setError('Erro ao conectar com a API. Tente novamente.');
     } finally {
       setLoading(false);

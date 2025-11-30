@@ -41,15 +41,20 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
   const isLongName = cidade.nome.length > 12;
   const totalSlides = slides.length;
 
-  // ✅ CORREÇÃO 1: Hidratação sem bloquear renderização
+  // ✅ CORREÇÃO: useEffect separados para evitar setState em cadeia
   useEffect(() => {
     setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+    
     setIsMobile(window.innerWidth < 768);
     
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isClient]);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
@@ -66,9 +71,7 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
     window.open(whatsappLink, '_blank');
   };
 
-  // ✅ CORREÇÃO 2: REMOVIDO "return null" - Hero sempre renderiza
-  // ✅ SSR renderiza versão desktop por padrão
-  
+  // ✅ Renderiza sempre (SSR funcional)
   return (
     <section
       id="inicio"
@@ -79,15 +82,14 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
           const isActive = currentSlide === index;
           const isFirst = index === 0;
 
-          // ✅ CORREÇÃO 3: Renderização condicional inteligente
-          // Mobile: só slide ativo | Desktop: primeiro + ativo
+          // ✅ Renderização condicional inteligente
           const shouldRender = isMobile 
             ? isActive 
             : (isActive || isFirst);
 
           return (
             <li
-              key={index} // ✅ Key estável (não usa currentSlide)
+              key={index}
               className={`slider-item ${isActive ? "active" : ""}`}
               style={{
                 position: 'absolute',
@@ -98,7 +100,6 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
                 zIndex: isActive ? 10 : 1
               }}
             >
-              {/* ✅ CORREÇÃO 4: Só renderiza imagem necessária */}
               {shouldRender && (
                 <div className="absolute inset-0 z-0">
                   <div 
@@ -111,10 +112,10 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
                       src={slide.image}
                       alt={slide.title}
                       fill
-                      priority={isFirst} // ✅ Só primeira com priority
-                      fetchPriority={isFirst ? "high" : "auto"} // ✅ ADICIONADO
+                      priority={isFirst}
+                      fetchPriority={isFirst ? "high" : "auto"}
                       sizes="100vw"
-                      quality={isMobile ? 75 : 85} // ✅ Qualidade adaptativa
+                      quality={isMobile ? 75 : 85}
                       className="object-cover"
                     />
                   </div>
@@ -126,15 +127,12 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
                 </div>
               )}
 
-              {/* ✅ CORREÇÃO 5: Conteúdo sem Framer Motion (CSS puro) */}
+              {/* Conteúdo */}
               <div className="relative z-10 w-full h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
                 <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
                   
                   <h1 
-                    className={`
-                      slider-reveal
-                      font-satoshi font-bold text-white tracking-tight leading-[1.15] drop-shadow-2xl text-balance
-                    `}
+                    className="slider-reveal font-satoshi font-bold text-white tracking-tight leading-[1.15] drop-shadow-2xl text-balance"
                     style={{ animationDelay: isActive ? '0.2s' : '0s' }}
                   >
                     <span className={`
@@ -227,7 +225,7 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
         </div>
       )}
 
-      {/* ✅ CSS Animations (substituindo Framer Motion) */}
+      {/* CSS Animations */}
       <style jsx>{`
         @keyframes smoothScale {
           0% { transform: scale(1); }
@@ -264,7 +262,6 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
           animation: fade-in 1s ease forwards;
         }
 
-        /* ✅ Previne Layout Shift */
         .hero-slider {
           position: relative;
           width: 100%;
