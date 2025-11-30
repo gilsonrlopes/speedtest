@@ -1,5 +1,6 @@
 'use client';
 
+// ✅ COPIE TODO ESTE ARQUIVO E SUBSTITUA src/components/TemplatesShowcase.tsx
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { ExternalLink, Zap, Smartphone, Search } from 'lucide-react';
@@ -83,14 +84,15 @@ const TemplatesShowcase: React.FC = () => {
         >
           <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-400/20 rounded-full px-5 py-2 mb-6">
              <Zap className="h-4 w-4 text-cyan-400" />
-             <span className="text-sm text-gray-300 font-sans">Demonstrações Interativas</span>
+             <span className="text-sm text-gray-200 font-sans">Demonstrações Interativas</span>
            </div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
             Coleção Premium GR Sites
           </h2>
           
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          {/* ✅ CORREÇÃO: text-gray-400 → text-gray-300 */}
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
             Design que impõe respeito. Performance que converte.
           </p>
         </div>
@@ -116,7 +118,7 @@ const TemplatesShowcase: React.FC = () => {
 
                 <Image
                   src={template.imagem}
-                  alt={template.nome}
+                  alt={`Template ${template.nome} - ${template.categoria}`}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -129,6 +131,7 @@ const TemplatesShowcase: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition-all flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 duration-300 shadow-xl"
+                    aria-label={`Ver demonstração do site ${template.nome}`}
                   >
                     Ver Site
                     <ExternalLink className="w-4 h-4" />
@@ -136,9 +139,7 @@ const TemplatesShowcase: React.FC = () => {
                 </div>
               </div>
 
-              {/* 2. INFO (Arredondado embaixo e com ajuste de altura) 
-                  REGULAGEM: Mudei de -mt-6 para -mt-4.
-              */}
+              {/* 2. INFO */}
               <div className="relative z-10 -mt-0 flex-1 bg-white/5 backdrop-blur-xl border border-white/10 border-t-0 p-6 rounded-b-[32px] hover:bg-white/[0.07] transition-colors shadow-2xl">
                 <div className="flex items-center justify-between mb-3">
                    <span className="text-xs font-medium text-cyan-400 uppercase tracking-wider">
@@ -150,18 +151,20 @@ const TemplatesShowcase: React.FC = () => {
                   {template.nome}
                 </h3>
 
-                <p className="text-sm text-gray-400 mb-6 line-clamp-2 leading-relaxed">
+                {/* ✅ CORREÇÃO: text-gray-400 → text-gray-300 */}
+                <p className="text-sm text-gray-300 mb-6 line-clamp-2 leading-relaxed">
                   {template.descricao}
                 </p>
 
                 <div className="flex gap-4 pt-4 border-t border-white/10">
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                  {/* ✅ CORREÇÃO: text-gray-500 → text-gray-400 */}
+                  <div className="flex items-center gap-1.5 text-xs text-gray-400">
                     <Zap className="w-3.5 h-3.5 text-green-400" /> Rápido
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                  <div className="flex items-center gap-1.5 text-xs text-gray-400">
                     <Smartphone className="w-3.5 h-3.5 text-blue-400" /> Responsivo
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                  <div className="flex items-center gap-1.5 text-xs text-gray-400">
                     <Search className="w-3.5 h-3.5 text-purple-400" /> SEO
                   </div>
                 </div>
@@ -192,14 +195,14 @@ const TemplatesShowcase: React.FC = () => {
                       )}
                       <Image
                         src={template.imagem}
-                        alt={template.nome}
+                        alt={`Template ${template.nome} - ${template.categoria}`}
                         fill
                         className="object-cover"
                         sizes="85vw"
                       />
                     </div>
 
-                    {/* Info Mobile - MESMA REGULAGEM AQUI (-mt-4) */}
+                    {/* Info Mobile */}
                     <div className="relative z-10 -mt-0 bg-white/5 backdrop-blur-xl border border-white/10 border-t-0 p-5 rounded-b-[32px] shadow-2xl">
                       <span className="text-xs font-medium text-cyan-400 uppercase tracking-wider block mb-2">
                         {template.categoria}
@@ -209,7 +212,7 @@ const TemplatesShowcase: React.FC = () => {
                         {template.nome}
                       </h3>
 
-                      <p className="text-sm text-gray-400 mb-4 line-clamp-2">
+                      <p className="text-sm text-gray-300 mb-4 line-clamp-2">
                         {template.descricao}
                       </p>
 
@@ -218,6 +221,7 @@ const TemplatesShowcase: React.FC = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full bg-white text-black px-4 py-3 rounded-full font-bold text-sm hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
+                        aria-label={`Ver demonstração do site ${template.nome}`}
                       >
                         Ver Demo ao Vivo
                         <ExternalLink className="w-3 h-3" />
@@ -251,7 +255,7 @@ const TemplatesShowcase: React.FC = () => {
             animation: `fadeInUp 0.8s ease-out backwards`
           }}
         >
-          <p className="text-gray-400 mb-8 text-lg">
+          <p className="text-gray-300 mb-8 text-lg">
             Não encontrou o que procura? Criamos um design <span className="text-white font-bold border-b border-cyan-500">100% exclusivo</span> para você.
           </p>
           
@@ -260,6 +264,7 @@ const TemplatesShowcase: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 bg-white text-black px-10 py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-105"
+            aria-label="Solicitar orçamento de site personalizado via WhatsApp"
           >
             Solicitar Site Personalizado
             <ExternalLink className="w-5 h-5" />

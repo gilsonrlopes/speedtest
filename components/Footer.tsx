@@ -71,7 +71,8 @@ const Footer: React.FC<FooterProps> = ({ cidade }) => {
               />
             </Link>
             
-            <p className="font-sans text-gray-400 leading-relaxed mb-6">
+            {/* ✅ CORREÇÃO: text-gray-400 → text-gray-300 (contraste 4.5:1) */}
+            <p className="font-sans text-gray-300 leading-relaxed mb-6">
               Transformamos negócios em <span className="text-white font-medium">{displayLocation}</span> com sites profissionais que atraem clientes e aumentam vendas.
             </p>
 
@@ -82,16 +83,18 @@ const Footer: React.FC<FooterProps> = ({ cidade }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:border-pink-400/50 transition-all"
+                aria-label="Instagram da GR Sites"
               >
-                <Instagram className="h-5 w-5 text-gray-400 group-hover:text-pink-400 transition-colors" />
+                <Instagram className="h-5 w-5 text-gray-300 group-hover:text-pink-400 transition-colors" />
               </a>
               <a
                 href={socialLinks.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:border-blue-400/50 transition-all"
+                aria-label="Facebook da GR Sites"
               >
-                <Facebook className="h-5 w-5 text-gray-400 group-hover:text-blue-400 transition-colors" />
+                <Facebook className="h-5 w-5 text-gray-300 group-hover:text-blue-400 transition-colors" />
               </a>
             </div>
           </motion.div>
@@ -110,9 +113,9 @@ const Footer: React.FC<FooterProps> = ({ cidade }) => {
                 <li key={index}>
                   <Link 
                     href={`/criacao-de-sites/${cidade.slug}#servicos`}
-                    className="font-sans text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
+                    className="font-sans text-sm text-gray-300 hover:text-white transition-colors flex items-center gap-2 group"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-gray-600 group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-purple-500 transition-all"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-gray-500 group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-purple-500 transition-all"></span>
                     {service}
                   </Link>
                 </li>
@@ -134,9 +137,9 @@ const Footer: React.FC<FooterProps> = ({ cidade }) => {
                 <li key={local.slug}>
                   <Link 
                     href={`/criacao-de-sites/${local.slug}`}
-                    className="font-sans text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
+                    className="font-sans text-sm text-gray-300 hover:text-white transition-colors flex items-center gap-2 group"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-gray-600 group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-purple-500 transition-all"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-gray-500 group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-purple-500 transition-all"></span>
                     {local.nome}
                   </Link>
                 </li>
@@ -168,36 +171,38 @@ const Footer: React.FC<FooterProps> = ({ cidade }) => {
                 href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors group"
+                className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors group"
+                aria-label="Entrar em contato via WhatsApp"
               >
                 <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-green-400/50 transition-all">
                   <Phone className="h-4 w-4" />
                 </div>
                 <div>
-                  <div className="font-sans text-xs text-gray-500">WhatsApp</div>
+                  <div className="font-sans text-xs text-gray-400">WhatsApp</div>
                   <div className="font-sans text-sm">(41) 99937-2194</div>
                 </div>
               </a>
 
               <a
                 href="mailto:contato@grsites.com.br"
-                className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors group"
+                className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors group"
+                aria-label="Enviar e-mail para GR Sites"
               >
                 <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-blue-400/50 transition-all">
                   <Mail className="h-4 w-4" />
                 </div>
                 <div>
-                  <div className="font-sans text-xs text-gray-500">E-mail</div>
+                  <div className="font-sans text-xs text-gray-400">E-mail</div>
                   <div className="font-sans text-sm">contato@grsites.com.br</div>
                 </div>
               </a>
 
-              <div className="flex items-center gap-3 text-gray-400">
+              <div className="flex items-center gap-3 text-gray-300">
                 <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
                   <MapPin className="h-4 w-4" />
                 </div>
                 <div>
-                  <div className="font-sans text-xs text-gray-500">Localização</div>
+                  <div className="font-sans text-xs text-gray-400">Localização</div>
                   <div className="font-sans text-sm">{displayLocation}, PR</div>
                 </div>
               </div>
@@ -223,7 +228,7 @@ const Footer: React.FC<FooterProps> = ({ cidade }) => {
           viewport={{ once: true }}
           className="py-8 border-t border-white/10"
         >
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-400">
             <p className="font-sans">
               © 2025 <span className="text-white font-medium">GR Sites</span>. Todos os direitos reservados.
             </p>

@@ -138,14 +138,14 @@ const Services: React.FC<ServicesProps> = ({ cidade }) => {
         <div className="text-center mb-16 animate-fade-up">
           <div className="inline-flex items-center gap-2 bg-blue-500/10 backdrop-blur-sm border border-blue-400/20 rounded-full px-5 py-2 mb-6">
             <Rocket className="h-4 w-4 text-blue-400" />
-            <span className="text-sm text-gray-300 font-sans">Soluções Sob Medida</span>
+            <span className="text-sm text-gray-200 font-sans">Soluções Sob Medida</span>
           </div>
 
           <h2 className="font-satoshi font-semibold text-4xl sm:text-5xl text-white mb-6">
             Escolha Seu Nível de Impacto
           </h2>
 
-          <p className="text-pretty font-sans text-lg text-gray-400 mx-auto leading-relaxed">
+          <p className="text-pretty font-sans text-lg text-gray-300 mx-auto leading-relaxed">
             De presença básica a <span className="text-white font-medium">máquina de vendas</span>: escolha o site ideal para{' '}
             <span className="text-white font-medium">{cidade.nome}</span>
           </p>
@@ -236,9 +236,9 @@ const Services: React.FC<ServicesProps> = ({ cidade }) => {
             </div>
 
             <div className="flex justify-center gap-2 mt-6">
-              <ChevronLeft className="h-5 w-5 text-gray-600 animate-pulse" />
-              <span className="text-xs text-gray-500 font-sans">Arraste para ver mais</span>
-              <ChevronRight className="h-5 w-5 text-gray-600 animate-pulse" />
+              <ChevronLeft className="h-5 w-5 text-gray-500 animate-pulse" />
+              <span className="text-xs text-gray-400 font-sans">Arraste para ver mais</span>
+              <ChevronRight className="h-5 w-5 text-gray-500 animate-pulse" />
             </div>
           </div>
 
@@ -317,15 +317,15 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, isActive, cidade, wh
       </div>
 
       <div className="mb-6">
-        <div className="text-xs font-sans text-gray-500 mb-2">{service.tagline}</div>
+        <div className="text-xs font-sans text-gray-400 mb-2">{service.tagline}</div>
         <h3 className="font-satoshi font-bold text-2xl text-white mb-3">{service.title}</h3>
-        <p className="font-sans text-sm text-gray-400 leading-relaxed">{service.description}</p>
+        <p className="font-sans text-sm text-gray-300 leading-relaxed">{service.description}</p>
       </div>
 
       <div className="mb-6 space-y-2">
         <div className="flex items-start gap-2">
           <span className="text-red-400/60 text-lg leading-none">×</span>
-          <p className="text-sm font-sans text-gray-500 line-through">{service.pain}</p>
+          <p className="text-sm font-sans text-gray-400 line-through">{service.pain}</p>
         </div>
         <div className="flex items-start gap-2">
           <span className="text-green-400 text-lg leading-none">✓</span>
@@ -335,7 +335,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, isActive, cidade, wh
 
       <ul className="space-y-2 mb-6">
         {service.features.map((feature: string, idx: number) => (
-          <li key={idx} className="flex items-start gap-2 text-sm font-sans text-gray-400">
+          <li key={idx} className="flex items-start gap-2 text-sm font-sans text-gray-300">
             <Check className="h-4 w-4 text-green-400 flex-shrink-0 mt-0.5" />
             {feature}
           </li>
@@ -349,7 +349,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, isActive, cidade, wh
         className={`block w-full text-center py-3 rounded-full font-satoshi font-semibold transition-all ${
           isActive
             ? `bg-gradient-to-r ${service.gradient} text-white hover:scale-105 shadow-lg shadow-blue-500/30`
-            : 'bg-white/5 text-gray-400 border border-white/10'
+            : 'bg-white/5 text-gray-300 border border-white/10'
         }`}
       >
         {isActive ? 'Quero Este Agora' : 'Ver Detalhes'}
