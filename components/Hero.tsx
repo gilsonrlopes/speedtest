@@ -1,41 +1,16 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image'; // ✅ Import REAL do Next.js
 import { ArrowRight } from 'lucide-react';
-
-// --- MOCK DO NEXT/IMAGE PARA O PREVIEW FUNCIONAR ---
-// ⚠️ NO SEU PROJETO REAL: Delete este bloco e use: import Image from 'next/image';
-const Image = ({ src, alt, fill, priority, sizes, quality, className, loading, fetchPriority, unoptimized, ...props }: any) => {
-  return (
-    <img
-      src={src}
-      alt={alt}
-      className={className}
-      loading={priority ? "eager" : "lazy"}
-      // Simulando o comportamento do 'fill' do Next.js
-      style={fill ? { 
-        position: 'absolute', 
-        height: '100%', 
-        width: '100%', 
-        inset: 0, 
-        objectFit: 'cover' 
-      } : {}}
-      {...props}
-    />
-  );
-};
-// ---------------------------------------------------
 
 interface Cidade {
   nome: string;
 }
 
 interface HeroProps {
-  cidade?: Cidade; // Opcional para o preview não quebrar
+  cidade: Cidade;
 }
-
-// Dados simulados para o preview
-const defaultCidade: Cidade = { nome: "Curitiba" };
 
 const slides = [
   {
@@ -61,11 +36,8 @@ const slides = [
   }
 ];
 
-const Hero: React.FC<HeroProps> = ({ cidade = defaultCidade }) => {
+const Hero: React.FC<HeroProps> = ({ cidade }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  
-  // Removemos o estado isMobile para usar CSS puro (Art Direction)
-  // Isso resolve o problema de LCP no Google Speed Test
 
   const isLongName = cidade.nome.length > 12;
   const totalSlides = slides.length;
@@ -95,7 +67,7 @@ const Hero: React.FC<HeroProps> = ({ cidade = defaultCidade }) => {
           const isActive = currentSlide === index;
           const isFirst = index === 0;
 
-          // Renderizamos se for ativo ou se for o primeiro (para garantir LCP rápido)
+          // ✅ Renderiza se ativo OU se for o primeiro (garante LCP)
           const shouldRender = isActive || isFirst;
 
           if (!shouldRender) return null;
@@ -103,7 +75,9 @@ const Hero: React.FC<HeroProps> = ({ cidade = defaultCidade }) => {
           return (
             <li
               key={index}
-              className={`slider-item absolute inset-0 transition-opacity duration-1000 ease-in-out ${isActive ? "opacity-100 visible z-10" : "opacity-0 invisible z-0"}`}
+              className={`slider-item absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                isActive ? "opacity-100 visible z-10" : "opacity-0 invisible z-0"
+              }`}
             >
               <div className="absolute inset-0 z-0">
                 <div 
@@ -112,32 +86,27 @@ const Hero: React.FC<HeroProps> = ({ cidade = defaultCidade }) => {
                     animation: isActive ? 'smoothScale 8s ease-out forwards' : 'none'
                   }}
                 >
-                  {/* --- OTIMIZAÇÃO CORE WEB VITALS --- */}
-                  {/* Ao invés de usar JS para decidir qual imagem mostrar, usamos CSS (hidden/block).
-                     O navegador baixa a imagem correta com base no display.
-                     Isso elimina o atraso de hidratação do React.
-                  */}
-
-                  {/* VERSÃO MOBILE (Visível apenas em telas < 768px) */}
-                  {/* Adicionado bg-gray-900 para evitar flash branco se a imagem demorar */}
+                  {/* ✅ ART DIRECTION: CSS decide qual imagem mostrar */}
+                  
+                  {/* MOBILE: Visível apenas < 768px */}
                   <div className="block md:hidden w-full h-full relative bg-gray-900">
                     <Image
                       src={slide.imageMobile}
-                      alt={slide.title}
+                      alt={`${slide.title} ${cidade.nome} - Mobile`}
                       fill
                       priority={isFirst}
                       sizes="100vw"
                       quality={75}
                       className="object-cover"
-                      unoptimized // ✅ IMPORTANTE: Garante que o AVIF carregue direto, sem reprocessamento do Next.js
+                      unoptimized
                     />
                   </div>
 
-                  {/* VERSÃO DESKTOP (Visível apenas em telas >= 768px) */}
+                  {/* DESKTOP: Visível apenas >= 768px */}
                   <div className="hidden md:block w-full h-full relative bg-gray-900">
                     <Image
                       src={slide.image}
-                      alt={slide.title}
+                      alt={`${slide.title} ${cidade.nome}`}
                       fill
                       priority={isFirst}
                       sizes="100vw"
@@ -153,7 +122,7 @@ const Hero: React.FC<HeroProps> = ({ cidade = defaultCidade }) => {
                 <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80" />
               </div>
 
-              {/* Conteúdo de Texto */}
+              {/* Conteúdo */}
               <div className="relative z-10 w-full h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
                 <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
                   
