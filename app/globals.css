@@ -1,0 +1,351 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* -------------------------------------------------------------------------- */
+/* 1. CONFIGURAÇÃO BASE (SHADCN/UI + VARIÁVEIS GLOBAIS)                       */
+/* -------------------------------------------------------------------------- */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 263.4 70% 50.4%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 263.4 70% 50.4%;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 2. TIPOGRAFIA PREMIUM                                                       */
+/* -------------------------------------------------------------------------- */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    /* Fundo Dark Premium Global */
+    background: radial-gradient(circle at 20% 20%, #0d0d12 0%, #050507 100%); 
+    overflow-x: hidden;
+    overflow-y: auto;
+    
+    /* ✅ CORREÇÃO CRÍTICA: Previne CLS do Header Fixo */
+    padding-top: 72px;
+  }
+
+  /* ✅ Padding maior no desktop */
+  @media (min-width: 768px) {
+    body {
+      padding-top: 80px;
+    }
+  }
+
+  /* Ajuste Fino de Títulos (Mobile vs Desktop) */
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight leading-[1.1]; 
+  }
+
+  /* Desktop: Respiro Elegante */
+  @media (min-width: 768px) {
+    h1, h2, h3 {
+      line-height: 1.2 !important;
+      letter-spacing: -0.02em !important;
+    }
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 3. ANIMAÇÕES OTIMIZADAS (SUBSTITUI FRAMER MOTION)                          */
+/* -------------------------------------------------------------------------- */
+@layer utilities {
+  /* ✅ HERO SLIDER ANIMATIONS (CSS PURO - MAIS RÁPIDO) */
+  
+  @keyframes sliderReveal {
+    0% {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes smoothScale {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1.15);
+    }
+  }
+
+  @keyframes scroll-bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(12px);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ✅ Classes Utilitárias */
+  .slider-reveal {
+    animation: sliderReveal 0.8s ease forwards;
+    opacity: 0;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 1s ease forwards;
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.8s ease-out forwards;
+  }
+
+  .animate-smooth-scale {
+    animation: smoothScale 8s ease-out forwards;
+  }
+
+  .animate-scroll-bounce {
+    animation: scroll-bounce 1.5s ease-in-out infinite;
+  }
+
+  /* Scrollbar Invisível (para carrosséis mobile) */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Text Balance (Títulos bonitos) */
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Text Pretty (Parágrafos sem viúvas) */
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* ✅ Animação de Borda (MAIS SUAVE - 8s em vez de 4s) */
+  @keyframes border-flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  .animate-border-flow {
+    background-size: 200% 200%;
+    animation: border-flow 8s ease infinite;
+  }
+
+  /* ✅ PREVINE LAYOUT SHIFT */
+  .hero-slider {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .slider-item {
+    will-change: opacity;
+    transform: translateZ(0); /* Force GPU acceleration */
+    backface-visibility: hidden;
+  }
+
+  /* ✅ Otimização de Performance */
+  .img-cover {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 4. PERFORMANCE OPTIMIZATIONS                                               */
+/* -------------------------------------------------------------------------- */
+
+/* ✅ Reduz Repaints no Header */
+.header {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* ✅ Smooth Scrolling Otimizado */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  .slider-reveal,
+  .animate-fade-up,
+  .animate-fade-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ✅ Font Loading Optimization */
+@font-face {
+  font-display: swap;
+}
+
+/* ✅ Image Lazy Loading Hint */
+img[loading="lazy"] {
+  content-visibility: auto;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 5. MOBILE OPTIMIZATIONS                                                    */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  /* ✅ Reduz animações no mobile para economizar bateria */
+  .animate-border-flow {
+    animation-duration: 12s; /* Mais lento no mobile */
+  }
+
+  /* ✅ Touch Target mínimo de 48px (Acessibilidade) */
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* ✅ Previne Zoom Acidental em Inputs */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 6. CRITICAL CSS INLINING (Para LCP)                                        */
+/* -------------------------------------------------------------------------- */
+
+/* ✅ Hero precisa estar visível IMEDIATAMENTE */
+#inicio {
+  contain: layout style paint;
+}
+
+/* ✅ Header Fixo sem Layout Shift */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72px;
+  z-index: 50;
+}
+
+@media (min-width: 768px) {
+  .header {
+    height: 80px;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 7. ACESSIBILIDADE                                                          */
+/* -------------------------------------------------------------------------- */
+
+/* ✅ Focus Visível para Teclado */
+*:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* ✅ Skip Link (Acessibilidade) */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: hsl(var(--primary));
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 8. PRINT STYLES                                                            */
+/* -------------------------------------------------------------------------- */
+
+@media print {
+  .header,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    padding-top: 0;
+  }
+}
