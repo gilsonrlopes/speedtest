@@ -4,41 +4,17 @@ import Script from "next/script";
 import localFont from "next/font/local";
 import { Geist, Geist_Mono, Playfair_Display, Raleway } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import fs from 'fs';
-import path from 'path';
 
-// ✅ Lê o CSS crítico inline (elimina blocking CSS)
-const criticalCss = fs.readFileSync(
-  path.join(process.cwd(), 'app/critical.css'),
-  'utf8'
-);
-
-// 1. Configuração da SATOSHI (Local)
+// 1. SATOSHI (Local)
 const satoshi = localFont({
   src: [
-    {
-      path: './fonts/Satoshi-Regular.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Satoshi-Medium.woff2',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Satoshi-Bold.woff2',
-      weight: '700',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Satoshi-Black.woff2',
-      weight: '900',
-      style: 'normal',
-    },
+    { path: "./fonts/Satoshi-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/Satoshi-Medium.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/Satoshi-Bold.woff2", weight: "700", style: "normal" },
+    { path: "./fonts/Satoshi-Black.woff2", weight: "900", style: "normal" },
   ],
-  variable: '--font-satoshi',
-  display: 'swap',
+  variable: "--font-satoshi",
+  display: "swap",
   preload: true,
 });
 
@@ -46,25 +22,25 @@ const satoshi = localFont({
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-  display: 'swap',
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-  display: 'swap',
+  display: "swap",
 });
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
-  display: 'swap',
+  display: "swap",
 });
 
 const raleway = Raleway({
   variable: "--font-raleway",
   subsets: ["latin"],
-  display: 'swap',
+  display: "swap",
 });
 
 // 3. Metadata (SEO)
@@ -83,8 +59,6 @@ export const metadata: Metadata = {
     "SEO",
     "marketing digital",
     "Curitiba",
-    "Next.js",
-    "React",
   ],
   authors: [{ name: "GR Sites", url: "https://www.grsites.com.br" }],
   creator: "Gilson Lopes",
@@ -127,6 +101,7 @@ export const metadata: Metadata = {
   },
 };
 
+// Google Tag Manager ID
 const GTM_ID = "GTM-KLJWTMN6";
 
 // Schema JSON-LD
@@ -148,32 +123,29 @@ const jsonLd = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="pt-br" className="dark scroll-smooth" suppressHydrationWarning>
       <head>
-        {/* ✅ OTIMIZAÇÃO CRÍTICA: CSS Inline (elimina 190ms de blocking) */}
-        <style dangerouslySetInnerHTML={{ __html: criticalCss }} />
-        
-        {/* ✅ OTIMIZAÇÃO 1: Preconnect GTM */}
+        {/* Preconnect GTM */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        
-        {/* ✅ OTIMIZAÇÃO 2: Preload imagem mobile (SÓ NO MOBILE) */}
-        <link 
-          rel="preload" 
-          as="image" 
+
+        {/* Preload imagem mobile */}
+        <link
+          rel="preload"
+          as="image"
           href="/hero01mob.avif"
           media="(max-width: 767px)"
           fetchPriority="high"
         />
-        
-        {/* ✅ OTIMIZAÇÃO 3: Preload imagem desktop (SÓ NO DESKTOP) */}
-        <link 
-          rel="preload" 
-          as="image" 
+
+        {/* Preload imagem desktop */}
+        <link
+          rel="preload"
+          as="image"
           href="/herolp01.webp"
           media="(min-width: 768px)"
           fetchPriority="high"
@@ -191,6 +163,7 @@ export default function RootLayout({
           antialiased font-sans bg-black
         `}
       >
+        {/* NOSCRIPT GTM */}
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
@@ -203,9 +176,10 @@ export default function RootLayout({
 
         {children}
 
+        {/* Vercel Insights (somente produção) */}
         {process.env.NODE_ENV === "production" && <SpeedInsights />}
 
-        {/* ✅ OTIMIZAÇÃO 4: GTM com lazyOnload (carrega DEPOIS do LCP) */}
+        {/* GTM Lazy Load */}
         <Script
           id="google-tag-manager"
           strategy="lazyOnload"
@@ -229,9 +203,7 @@ export default function RootLayout({
         <Script
           id="json-ld-organization"
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ 
-            __html: JSON.stringify(jsonLd)
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </body>
     </html>
