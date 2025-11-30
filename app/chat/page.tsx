@@ -108,27 +108,43 @@ const FLUXO = {
   },
 };
 
+interface Message {
+  id: string;
+  type: 'user' | 'bot';
+  text: string;
+  options?: Array<{ text: string; value: string }>;
+}
+
+interface Option {
+  text: string;
+  value: string;
+}
+
 export default function ChatPage() {
   const [mounted, setMounted] = useState(false);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setMounted(true);
-    setMessages([{
-      id: '1',
-      type: 'bot',
-      text: FLUXO.inicio.texto,
-      options: FLUXO.inicio.opcoes,
-    }]);
+    const timer = setTimeout(() => {
+      setMounted(true);
+      setMessages([{
+        id: '1',
+        type: 'bot',
+        text: FLUXO.inicio.texto,
+        options: FLUXO.inicio.opcoes,
+      }]);
+    }, 0);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleOptionClick = (option: any) => {
+  const handleOptionClick = (option: Option) => {
     setMessages(prev => [...prev, {
       id: Date.now().toString(),
       type: 'user',
@@ -299,9 +315,9 @@ export default function ChatPage() {
                     </p>
                   </div>
                   
-                  {msg.options?.length > 0 && (
+                  {msg.options?.length && msg.options.length > 0 && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
-                      {msg.options.map((opt: any, i: number) => (
+                      {msg.options.map((opt: Option, i: number) => (
                         <button
                           key={i}
                           onClick={() => handleOptionClick(opt)}
