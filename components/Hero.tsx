@@ -1,69 +1,74 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
+
+// --- MOCK DO NEXT/IMAGE PARA O PREVIEW FUNCIONAR ---
+// ⚠️ NO SEU PROJETO REAL: Delete este bloco e use: import Image from 'next/image';
+const Image = ({ src, alt, fill, priority, sizes, quality, className, loading, fetchPriority, unoptimized, ...props }: any) => {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      loading={priority ? "eager" : "lazy"}
+      // Simulando o comportamento do 'fill' do Next.js
+      style={fill ? { 
+        position: 'absolute', 
+        height: '100%', 
+        width: '100%', 
+        inset: 0, 
+        objectFit: 'cover' 
+      } : {}}
+      {...props}
+    />
+  );
+};
+// ---------------------------------------------------
 
 interface Cidade {
   nome: string;
 }
 
 interface HeroProps {
-  cidade: Cidade;
+  cidade?: Cidade; // Opcional para o preview não quebrar
 }
+
+// Dados simulados para o preview
+const defaultCidade: Cidade = { nome: "Curitiba" };
 
 const slides = [
   {
     image: "/herolp01.webp",
+    imageMobile: "/hero01mob.avif",
     title: "Criação de Sites em",
     subtitle: "Seu concorrente aparece no Google. Você não.",
     description: "Colocamos seu Site na primeira página do Google."
   },
   {
     image: "/hs06.webp",
+    imageMobile: "/hero02mob.avif",
     title: "Sua Presença Digital em",
     subtitle: "Clientes buscam serviços no Google. Não no Instagram",
     description: "Com um site otimizado, você aparece para quem realmente procura."
   },
   {
     image: "/chart01.webp",
+    imageMobile: "/hero03mob.avif",
     title: "Domine o Google em",
     subtitle: "Primeira página em 90 dias. Com estratégia, não mágica.",
     description: "SEO estratégico que coloca você acima da concorrência no Google."
   }
 ];
 
-const Hero: React.FC<HeroProps> = ({ cidade }) => {
+const Hero: React.FC<HeroProps> = ({ cidade = defaultCidade }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth < 768;
-  });
+  
+  // Removemos o estado isMobile para usar CSS puro (Art Direction)
+  // Isso resolve o problema de LCP no Google Speed Test
 
   const isLongName = cidade.nome.length > 12;
   const totalSlides = slides.length;
-
-  // ✅ FIX MOBILE: Throttle com requestAnimationFrame
-  useEffect(() => {
-    let rafId: number;
-    
-    const handleResize = () => {
-      if (rafId) return; // Previne múltiplas chamadas
-      
-      rafId = requestAnimationFrame(() => {
-        setIsMobile(window.innerWidth < 768);
-        rafId = 0;
-      });
-    };
-
-    handleResize(); // Primeira checagem
-    window.addEventListener('resize', handleResize, { passive: true });
-    
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
@@ -85,62 +90,75 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
       id="inicio"
       className="relative w-full h-screen min-h-[600px] overflow-hidden bg-black"
     >
-      <ul className="hero-slider">
+      <ul className="hero-slider block m-0 p-0 list-none h-full w-full">
         {slides.map((slide, index) => {
           const isActive = currentSlide === index;
           const isFirst = index === 0;
 
-          // ✅ Mobile: só renderiza slide ativo | Desktop: ativo + primeiro
-          const shouldRender = isMobile ? isActive : (isActive || isFirst);
+          // Renderizamos se for ativo ou se for o primeiro (para garantir LCP rápido)
+          const shouldRender = isActive || isFirst;
+
+          if (!shouldRender) return null;
 
           return (
             <li
               key={index}
-              className={`slider-item ${isActive ? "active" : ""}`}
-              style={{
-                position: 'absolute',
-                inset: 0,
-                opacity: isActive ? 1 : 0,
-                visibility: isActive ? 'visible' : 'hidden',
-                transition: 'opacity 1s ease-in-out',
-                zIndex: isActive ? 10 : 1
-              }}
+              className={`slider-item absolute inset-0 transition-opacity duration-1000 ease-in-out ${isActive ? "opacity-100 visible z-10" : "opacity-0 invisible z-0"}`}
             >
-              {shouldRender && (
-                <div className="absolute inset-0 z-0">
-                  <div 
-                    className="relative w-full h-full"
-                    style={{
-                      animation: isActive ? 'smoothScale 8s ease-out forwards' : 'none'
-                    }}
-                  >
-                    {/* ✅ FIX MOBILE: Tamanhos responsivos otimizados */}
+              <div className="absolute inset-0 z-0">
+                <div 
+                  className="relative w-full h-full"
+                  style={{
+                    animation: isActive ? 'smoothScale 8s ease-out forwards' : 'none'
+                  }}
+                >
+                  {/* --- OTIMIZAÇÃO CORE WEB VITALS --- */}
+                  {/* Ao invés de usar JS para decidir qual imagem mostrar, usamos CSS (hidden/block).
+                     O navegador baixa a imagem correta com base no display.
+                     Isso elimina o atraso de hidratação do React.
+                  */}
+
+                  {/* VERSÃO MOBILE (Visível apenas em telas < 768px) */}
+                  {/* Adicionado bg-gray-900 para evitar flash branco se a imagem demorar */}
+                  <div className="block md:hidden w-full h-full relative bg-gray-900">
+                    <Image
+                      src={slide.imageMobile}
+                      alt={slide.title}
+                      fill
+                      priority={isFirst}
+                      sizes="100vw"
+                      quality={75}
+                      className="object-cover"
+                      unoptimized // ✅ IMPORTANTE: Garante que o AVIF carregue direto, sem reprocessamento do Next.js
+                    />
+                  </div>
+
+                  {/* VERSÃO DESKTOP (Visível apenas em telas >= 768px) */}
+                  <div className="hidden md:block w-full h-full relative bg-gray-900">
                     <Image
                       src={slide.image}
                       alt={slide.title}
                       fill
                       priority={isFirst}
-                      fetchPriority={isFirst ? "high" : "auto"}
-                      sizes="(max-width: 640px) 640px, (max-width: 1024px) 1024px, 1920px"
-                      quality={isMobile ? 65 : 75}
+                      sizes="100vw"
+                      quality={80}
                       className="object-cover"
-                      loading={isFirst ? "eager" : "lazy"}
                     />
                   </div>
-                  
-                  {/* Overlays - simplificados */}
-                  <div className="absolute inset-0 bg-black/60 md:bg-black/50" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80" />
                 </div>
-              )}
+                
+                {/* Overlays */}
+                <div className="absolute inset-0 bg-black/60 md:bg-black/50" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80" />
+              </div>
 
-              {/* Conteúdo */}
+              {/* Conteúdo de Texto */}
               <div className="relative z-10 w-full h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
                 <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
                   
                   <h1 
-                    className="slider-reveal font-satoshi font-bold text-white tracking-tight leading-[1.15] drop-shadow-2xl text-balance"
+                    className="slider-reveal font-sans font-bold text-white tracking-tight leading-[1.15] drop-shadow-2xl"
                     style={{ animationDelay: isActive ? '0.2s' : '0s' }}
                   >
                     <span className={`
@@ -154,16 +172,16 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
                     
                     <span className={`
                       md:block 
-                      bg-clip-text 
+                      text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300
                       ${isLongName ? 'text-3xl sm:text-5xl' : 'text-4xl sm:text-5xl'} 
-                      md:text-7xl text-white
+                      md:text-7xl
                     `}>
                       {cidade.nome}
                     </span>
                   </h1>
 
                   <p 
-                    className="slider-reveal text-lg sm:text-2xl text-gray-200 font-medium max-w-3xl mx-auto text-balance"
+                    className="slider-reveal text-lg sm:text-2xl text-gray-200 font-medium max-w-3xl mx-auto"
                     style={{ animationDelay: isActive ? '0.4s' : '0s' }}
                   >
                     {slide.subtitle}
@@ -182,7 +200,7 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
                   >
                     <button
                       onClick={handleCTA}
-                      className="group relative inline-flex items-center justify-center gap-3 bg-white text-black font-bold text-lg sm:text-xl px-8 py-4 sm:px-10 sm:py-5 rounded-full hover:bg-gray-100 transition-all duration-300 shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_-15px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95"
+                      className="group relative inline-flex items-center justify-center gap-3 bg-white text-black font-bold text-lg sm:text-xl px-8 py-4 sm:px-10 sm:py-5 rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg hover:scale-105 active:scale-95"
                       aria-label="Solicitar orçamento via WhatsApp"
                     >
                       Quero Meu Site Agora
@@ -215,37 +233,10 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
         ))}
       </div>
 
-      {/* Scroll Indicator */}
-      <div
-        className="absolute bottom-24 sm:bottom-12 left-1/2 transform -translate-x-1/2 z-20 hidden md:block opacity-0 animate-fade-in"
-        style={{ animationDelay: '1.5s', animationFillMode: 'forwards' }}
-        aria-hidden="true"
-      >
-        <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center pt-2">
-          <div 
-            className="w-1 h-2 bg-white/60 rounded-full"
-            style={{
-              animation: 'scroll-bounce 1.5s ease-in-out infinite'
-            }}
-          />
-        </div>
-      </div>
-
-      {/* CSS Animations */}
       <style jsx>{`
         @keyframes smoothScale {
           0% { transform: scale(1); }
           100% { transform: scale(1.15); }
-        }
-
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        @keyframes scroll-bounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(12px); }
         }
 
         .slider-reveal {
@@ -262,20 +253,6 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
             transform: translateY(0);
             opacity: 1;
           }
-        }
-
-        .animate-fade-in {
-          animation: fade-in 1s ease forwards;
-        }
-
-        .hero-slider {
-          position: relative;
-          width: 100%;
-          height: 100%;
-        }
-
-        .slider-item {
-          will-change: opacity;
         }
       `}</style>
     </section>
