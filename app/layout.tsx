@@ -146,9 +146,27 @@ export default function RootLayout({
   return (
     <html lang="pt-br" className="dark scroll-smooth" suppressHydrationWarning>
       <head>
-        {/* ✅ FIX 1: Pré-conectar + DNS Prefetch para GTM */}
+        {/* ✅ OTIMIZAÇÃO 1: Preconnect GTM */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        
+        {/* ✅ OTIMIZAÇÃO 2: Preload imagem mobile (SÓ NO MOBILE) */}
+        <link 
+          rel="preload" 
+          as="image" 
+          href="/hero01mob.avif"
+          media="(max-width: 767px)"
+          fetchPriority="high"
+        />
+        
+        {/* ✅ OTIMIZAÇÃO 3: Preload imagem desktop (SÓ NO DESKTOP) */}
+        <link 
+          rel="preload" 
+          as="image" 
+          href="/herolp01.webp"
+          media="(min-width: 768px)"
+          fetchPriority="high"
+        />
       </head>
 
       <body
@@ -176,7 +194,7 @@ export default function RootLayout({
 
         {process.env.NODE_ENV === "production" && <SpeedInsights />}
 
-        {/* ✅ FIX 2: GTM com strategy="lazyOnload" (carrega DEPOIS do LCP) */}
+        {/* ✅ OTIMIZAÇÃO 4: GTM com lazyOnload (carrega DEPOIS do LCP) */}
         <Script
           id="google-tag-manager"
           strategy="lazyOnload"

@@ -1,19 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // ✅ Correção para Firefox - Webpack Config
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-      };
-    }
-    // Reduz logging para evitar problemas
-    config.infrastructureLogging = { level: 'error' };
-    return config;
-  },
-
   // ✅ Otimizações de Imagem
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -33,6 +20,11 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn']
     } : false,
+  },
+
+  // ✅ OTIMIZAÇÃO CRÍTICA: Reduz JavaScript desnecessário
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
 
   // ✅ Headers de Cache para Performance
@@ -55,16 +47,6 @@ const nextConfig: NextConfig = {
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        // Headers para melhor compatibilidade com Firefox (desenvolvimento)
-        source: '/:path*',
-        headers: [
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
           },
         ],
       },
