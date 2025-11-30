@@ -35,9 +35,7 @@ const slides = [
 
 const Hero: React.FC<HeroProps> = ({ cidade }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  // ✅ Estado inicial correto: detecta no render, não no effect
   const [isMobile, setIsMobile] = useState(() => {
-    // SSR-safe: retorna false no servidor
     if (typeof window === 'undefined') return false;
     return window.innerWidth < 768;
   });
@@ -45,19 +43,27 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
   const isLongName = cidade.nome.length > 12;
   const totalSlides = slides.length;
 
-  // ✅ SOLUÇÃO CORRETA: Só atualiza em EVENTOS, não em useEffect
+  // ✅ FIX MOBILE: Throttle com requestAnimationFrame
   useEffect(() => {
-    // Listener que atualiza quando a janela muda
+    let rafId: number;
+    
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      if (rafId) return; // Previne múltiplas chamadas
+      
+      rafId = requestAnimationFrame(() => {
+        setIsMobile(window.innerWidth < 768);
+        rafId = 0;
+      });
     };
 
-    // Atualiza uma vez ao montar (correção de hydration)
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []); // ✅ Array vazio: roda só uma vez
+    handleResize(); // Primeira checagem
+    window.addEventListener('resize', handleResize, { passive: true });
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
@@ -84,10 +90,8 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
           const isActive = currentSlide === index;
           const isFirst = index === 0;
 
-          // ✅ Renderização condicional inteligente
-          const shouldRender = isMobile 
-            ? isActive 
-            : (isActive || isFirst);
+          // ✅ Mobile: só renderiza slide ativo | Desktop: ativo + primeiro
+          const shouldRender = isMobile ? isActive : (isActive || isFirst);
 
           return (
             <li
@@ -110,19 +114,21 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
                       animation: isActive ? 'smoothScale 8s ease-out forwards' : 'none'
                     }}
                   >
+                    {/* ✅ FIX MOBILE: Tamanhos responsivos otimizados */}
                     <Image
                       src={slide.image}
                       alt={slide.title}
                       fill
                       priority={isFirst}
                       fetchPriority={isFirst ? "high" : "auto"}
-                      sizes="100vw"
-                      quality={isMobile ? 70 : 75}
+                      sizes="(max-width: 640px) 640px, (max-width: 1024px) 1024px, 1920px"
+                      quality={isMobile ? 65 : 75}
                       className="object-cover"
+                      loading={isFirst ? "eager" : "lazy"}
                     />
                   </div>
                   
-                  {/* Overlays */}
+                  {/* Overlays - simplificados */}
                   <div className="absolute inset-0 bg-black/60 md:bg-black/50" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80" />
