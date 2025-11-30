@@ -4,6 +4,14 @@ import Script from "next/script";
 import localFont from "next/font/local";
 import { Geist, Geist_Mono, Playfair_Display, Raleway } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import fs from 'fs';
+import path from 'path';
+
+// ✅ Lê o CSS crítico inline (elimina blocking CSS)
+const criticalCss = fs.readFileSync(
+  path.join(process.cwd(), 'app/critical.css'),
+  'utf8'
+);
 
 // 1. Configuração da SATOSHI (Local)
 const satoshi = localFont({
@@ -146,6 +154,9 @@ export default function RootLayout({
   return (
     <html lang="pt-br" className="dark scroll-smooth" suppressHydrationWarning>
       <head>
+        {/* ✅ OTIMIZAÇÃO CRÍTICA: CSS Inline (elimina 190ms de blocking) */}
+        <style dangerouslySetInnerHTML={{ __html: criticalCss }} />
+        
         {/* ✅ OTIMIZAÇÃO 1: Preconnect GTM */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
