@@ -90,18 +90,19 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
                   
                   {/* MOBILE: Visível apenas < 768px */}
                   <div className="block md:hidden w-full h-full relative bg-gray-900">
-                    <Image
-                      src={slide.imageMobile}
-                      alt={`${slide.title} ${cidade.nome} - Mobile`}
-                      fill
-                      priority={isFirst}
-                      sizes="100vw"
-                      quality={75}
-                      className="object-cover"
-                      unoptimized
-                    />
-                  </div>
-
+  <Image
+    src={slide.imageMobile}
+    alt={`${slide.title} ${cidade.nome} - Mobile`}
+    fill
+    priority={isFirst}
+    fetchPriority={isFirst ? "high" : "auto"}
+    loading={isFirst ? "eager" : "lazy"}
+    sizes="100vw"
+    quality={75}
+    className="object-cover"
+    unoptimized
+  />
+</div>
                   {/* DESKTOP: Visível apenas >= 768px */}
                   <div className="hidden md:block w-full h-full relative bg-gray-900">
                     <Image
