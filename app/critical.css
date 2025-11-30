@@ -1,6 +1,7 @@
 /* app/critical.css */
-/* ✅ SÓ O CSS CRÍTICO DO HERO */
+/* ✅ CSS CRÍTICO DO HERO - INLINE NO HEAD */
 
+/* Estrutura Hero */
 .hero-slider {
   position: relative;
   width: 100%;
@@ -18,6 +19,7 @@
   transition: opacity 1s ease-in-out;
 }
 
+/* Animações */
 @keyframes smoothScale {
   0% { transform: scale(1); }
   100% { transform: scale(1.15); }
@@ -39,7 +41,7 @@
   }
 }
 
-/* Classes Tailwind essenciais para Hero */
+/* Layout Básico */
 .relative { position: relative; }
 .absolute { position: absolute; }
 .inset-0 { inset: 0; }
@@ -49,16 +51,99 @@
 .hidden { display: none; }
 .block { display: block; }
 .flex { display: flex; }
+.inline-flex { display: inline-flex; }
+
+/* Dimensões */
 .w-full { width: 100%; }
 .h-full { height: 100%; }
 .h-screen { height: 100vh; }
 .min-h-\[600px\] { min-height: 600px; }
-.overflow-hidden { overflow: hidden; }
+.w-6 { width: 1.5rem; }
+.h-6 { height: 1.5rem; }
+
+/* Cores */
 .bg-black { background-color: #000; }
+.bg-white { background-color: #fff; }
 .bg-gray-900 { background-color: rgb(17 24 39); }
+.text-white { color: #fff; }
+.text-black { color: #000; }
+.text-gray-200 { color: rgb(229 231 235); }
+.text-gray-400 { color: rgb(156 163 175); }
+.text-gray-500 { color: rgb(107 114 128); }
+
+/* Layout & Spacing */
+.overflow-hidden { overflow: hidden; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.text-center { text-align: center; }
+.gap-3 { gap: 0.75rem; }
+.space-y-6 > * + * { margin-top: 1.5rem; }
+.max-w-5xl { max-width: 64rem; }
+.max-w-3xl { max-width: 48rem; }
+.max-w-2xl { max-width: 42rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+.px-8 { padding-left: 2rem; padding-right: 2rem; }
+.mt-4 { margin-top: 1rem; }
+.pt-4 { padding-top: 1rem; }
+
+/* Tipografia */
+.text-xs { font-size: 0.75rem; line-height: 1rem; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.text-base { font-size: 1rem; line-height: 1.5rem; }
+.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+.text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+.text-5xl { font-size: 3rem; line-height: 1; }
+.font-bold { font-weight: 700; }
+.font-medium { font-weight: 500; }
+.font-sans { font-family: var(--font-satoshi), system-ui, sans-serif; }
+.leading-relaxed { line-height: 1.625; }
+.leading-\[1\.15\] { line-height: 1.15; }
+.tracking-tight { letter-spacing: -0.025em; }
+
+/* Efeitos */
+.drop-shadow-2xl { filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15)); }
+.rounded-full { border-radius: 9999px; }
 .object-cover { object-fit: cover; }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+
+/* Transições */
+.transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+.transition-transform { transition-property: transform; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+.duration-300 { transition-duration: 300ms; }
+.duration-500 { transition-duration: 500ms; }
+
+/* Interações */
+.hover\:bg-gray-100:hover { background-color: rgb(243 244 246); }
+.hover\:scale-105:hover { transform: scale(1.05); }
+.hover\:translate-x-1:hover { transform: translateX(0.25rem); }
+.active\:scale-95:active { transform: scale(0.95); }
+.group:hover .group-hover\:translate-x-1 { transform: translateX(0.25rem); }
+
+/* Posicionamento */
+.left-1\/2 { left: 50%; }
+.bottom-8 { bottom: 2rem; }
+.-translate-x-1\/2 { transform: translateX(-50%); }
+
+/* Responsive (Mobile First) */
+@media (min-width: 640px) {
+  .sm\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .sm\:px-10 { padding-left: 2.5rem; padding-right: 2.5rem; }
+  .sm\:py-5 { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+  .sm\:text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+  .sm\:text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+  .sm\:text-2xl { font-size: 1.5rem; line-height: 2rem; }
+  .sm\:text-5xl { font-size: 3rem; line-height: 1; }
+  .sm\:block { display: block; }
+}
 
 @media (min-width: 768px) {
   .md\:hidden { display: none; }
   .md\:block { display: block; }
+  .md\:mb-2 { margin-bottom: 0.5rem; }
+  .md\:text-7xl { font-size: 4.5rem; line-height: 1; }
+  .md\:space-y-8 > * + * { margin-top: 2rem; }
 }
