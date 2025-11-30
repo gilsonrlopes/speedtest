@@ -22,7 +22,7 @@ const CIDADES: Cidade[] = [
   { slug: "fazenda-rio-grande", nome: "Fazenda Rio Grande", populacao: 161506 },
   { slug: "campo-largo", nome: "Campo Largo", populacao: 132960 },
   {
-    slug: "almirante-tamandaré",
+    slug: "almirante-tamandare",
     nome: "Almirante Tamandaré",
     populacao: 121601,
   },
