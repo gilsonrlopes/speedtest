@@ -35,26 +35,29 @@ const slides = [
 
 const Hero: React.FC<HeroProps> = ({ cidade }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isClient, setIsClient] = useState(false);
+  // ✅ Estado inicial correto: detecta no render, não no effect
+  const [isMobile, setIsMobile] = useState(() => {
+    // SSR-safe: retorna false no servidor
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 768;
+  });
 
   const isLongName = cidade.nome.length > 12;
   const totalSlides = slides.length;
 
-  // ✅ CORREÇÃO: useEffect separados para evitar setState em cadeia
+  // ✅ SOLUÇÃO CORRETA: Só atualiza em EVENTOS, não em useEffect
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    // Listener que atualiza quando a janela muda
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
 
-  useEffect(() => {
-    if (!isClient) return;
-    
-    setIsMobile(window.innerWidth < 768);
-    
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    // Atualiza uma vez ao montar (correção de hydration)
+    handleResize();
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [isClient]);
+  }, []); // ✅ Array vazio: roda só uma vez
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
@@ -71,7 +74,6 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
     window.open(whatsappLink, '_blank');
   };
 
-  // ✅ Renderiza sempre (SSR funcional)
   return (
     <section
       id="inicio"
@@ -208,22 +210,20 @@ const Hero: React.FC<HeroProps> = ({ cidade }) => {
       </div>
 
       {/* Scroll Indicator */}
-      {isClient && (
-        <div
-          className="absolute bottom-24 sm:bottom-12 left-1/2 transform -translate-x-1/2 z-20 hidden md:block opacity-0 animate-fade-in"
-          style={{ animationDelay: '1.5s', animationFillMode: 'forwards' }}
-          aria-hidden="true"
-        >
-          <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center pt-2">
-            <div 
-              className="w-1 h-2 bg-white/60 rounded-full"
-              style={{
-                animation: 'scroll-bounce 1.5s ease-in-out infinite'
-              }}
-            />
-          </div>
+      <div
+        className="absolute bottom-24 sm:bottom-12 left-1/2 transform -translate-x-1/2 z-20 hidden md:block opacity-0 animate-fade-in"
+        style={{ animationDelay: '1.5s', animationFillMode: 'forwards' }}
+        aria-hidden="true"
+      >
+        <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center pt-2">
+          <div 
+            className="w-1 h-2 bg-white/60 rounded-full"
+            style={{
+              animation: 'scroll-bounce 1.5s ease-in-out infinite'
+            }}
+          />
         </div>
-      )}
+      </div>
 
       {/* CSS Animations */}
       <style jsx>{`
